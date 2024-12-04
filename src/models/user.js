@@ -1,10 +1,11 @@
 const mongoose= require("mongoose");
+const validator = require("validator");
 
 const userSchema=new mongoose.Schema({
     firstName:{
         type: String,
         required:true,
-        minLength:5,
+        minLength:3,
     },
     lastName:{
         type: String,
@@ -16,12 +17,22 @@ const userSchema=new mongoose.Schema({
         trim: true,
         unique: true,
         lowercase:true,
+        validate(value){
+              if(!validator.isEmail(value)){
+                throw new Error("Invalid Email address")
+              }
+        }
     },
     password:{
         type:String,
         required:true,
         minLength:8,
-        maxLength:20,
+        maxLength:100,
+        validate(value){
+            if(!validator.isStrongPassword(value)){
+               throw new Error("Password is weak");
+            }
+        }
     },
     gender:{
         type:String,
@@ -34,11 +45,19 @@ const userSchema=new mongoose.Schema({
     },
     photoUrl:{
         type:String,
-        default:"https//grographyandyou.com/images/user-profile.png",
+        default:"https://cdn-icons-png.flaticon.com/512/2202/2202112.png",
+        validate(value){
+            if(!validator.isURL(value)){
+                throw new Error("Enter a valid URL");
+            }
+        }
+
     },
     about:{
         type:String,
         default:"This is the default about section",
+        minLength:5,
+        maxLength:1000,
     },
     skills:{
         type:[String],
