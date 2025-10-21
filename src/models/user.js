@@ -48,11 +48,11 @@ const userSchema=new mongoose.Schema({
     photoUrl:{
         type:String,
         default:"https://cdn-icons-png.flaticon.com/512/2202/2202112.png",
-        validate(value){
-            if(!validator.isURL(value)){
-                throw new Error("Enter a valid URL");
-            }
-        }
+        // validate(value){
+        //     if(!validator.isURL(value)){
+        //         throw new Error("Enter a valid URL");
+        //     }
+        // }
 
     },
     about:{
@@ -69,6 +69,8 @@ const userSchema=new mongoose.Schema({
     timestamps:true,
 })
 
+
+//The lines form the 75 to 91 are not used anywhere
 
 userSchema.methods.getJWT=async function(){
     const user=this;

@@ -12,4 +12,16 @@ else if(!validator.isEmail(emailId)){
 }
 }
 
-module.exports={signUpValidations};
+
+
+const validateProfileEdit=(req)=>{
+
+    const ALLOWED_UPDATE=["photoUrl","age","gender","skills","about"];
+    const isUpdateAllowed= Object.keys(req.body).every(key=>ALLOWED_UPDATE.includes(key));
+    return isUpdateAllowed;
+
+}
+
+
+
+module.exports={signUpValidations,validateProfileEdit};
