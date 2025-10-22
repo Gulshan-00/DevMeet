@@ -4,6 +4,7 @@ const authRouter=express.Router();
 const bcrypt=require("bcrypt");
 const User=require("../models/user");
 const jwt=require("jsonwebtoken")
+const {userAuth}=require("../middleware/auth")
 
 //signup the used data into the database
 authRouter.post("/signup",async(req,res)=>{
@@ -13,6 +14,7 @@ authRouter.post("/signup",async(req,res)=>{
         signUpValidations(req);
         //encrypting the password
         const {firstName, lastName, emailId, password,gender,profileUrl,about,skills}=req.body;
+
         const passwordHash=await bcrypt.hash(password,10);
 
         const userObj={firstName,lastName, gender,emailId,password:passwordHash,profileUrl,about,skills}
@@ -54,6 +56,7 @@ authRouter.post("/login", async (req,res)=> {
         res.send("login Successful");
            
         }else{
+
              throw new Error("Invalid Credential")
         }
 
@@ -78,6 +81,33 @@ authRouter.post("/logout",(req,res)=>{
 }catch(err){
     res.status(400).send("Error: "+err.message);
 }
+
+})
+
+
+authRouter.post("/forgotpassword", userAuth, async (req,res)=>{
+    try{
+    
+        const {emailId,oldPassword,newPassword}=req.body;
+        const changePassword=await bcrypt.hash(newPassword,10);
+
+        const user=await User.findOne({emailId:emailId});
+        const matchPassword=await bcrypt.compare(oldPassword,user.password);
+
+        if(matchPassword){
+            user.password=changePassword;
+            user.save();
+            res.clearCookie('token');
+            res.send("Password changed successfully");
+        }else{
+            throw new Error("Old Password is incorrect");
+        }
+        
+
+       res.send("successfully reset password");
+    }catch(err){
+        res.send("Error: "+err.message);
+    }
 
 })
 

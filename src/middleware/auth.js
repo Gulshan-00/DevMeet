@@ -3,11 +3,10 @@ const User=require("../models/user");
 
 const userAuth =async (req,res,next)=>{
    try{
-    const cookie=req.cookies;
-    const {token}=cookie;
-    if(!token){
-      throw new Error("Login again-- token expired");
-    }
+    const {token}=req.cookies;
+          if(!token){
+            throw new Error("Login again-- token expired");
+          }
     const decodedToken=await jwt.verify(token, "Gulsh@n09");
      
     const userProfile=await User.findById(decodedToken);
