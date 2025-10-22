@@ -11,14 +11,16 @@ app.use(cors({
     origin:"http://localhost:5173",
     credentials:true,
 }));
-app.use(express.json());
+app.use(express.json());  //to conver the json into the javascript object.
 app.use(cookieParser()); //to read the cookies 
 
 const authRouter=require("./routes/auth");
 const profileRouter=require("./routes/profile");
+const requestRouter = require("./routes/request");
 
 app.use("/",authRouter);
 app.use("/",profileRouter);
+app.use("/",requestRouter)
 
 
 
