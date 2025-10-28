@@ -13,11 +13,11 @@ authRouter.post("/signup",async(req,res)=>{
         //validations
         signUpValidations(req);
         //encrypting the password
-        const {firstName, lastName, emailId, password,gender,profileUrl,about,skills}=req.body;
+        const {firstName,emailId, password}=req.body;
 
         const passwordHash=await bcrypt.hash(password,10);
 
-        const userObj={firstName,lastName, gender,emailId,password:passwordHash,profileUrl,about,skills}
+        const userObj={firstName, emailId,password:passwordHash}
         const user=new User(userObj);
 
             // if(req?.body?.skills.length>10){
@@ -53,7 +53,7 @@ authRouter.post("/login", async (req,res)=> {
         //JWT STARTS
         const token= await jwt.sign({_id:user._id},"Gulsh@n09"); 
         res.cookie("token",token);
-        res.send("login Successful");
+        res.send(user);
            
         }else{
 
